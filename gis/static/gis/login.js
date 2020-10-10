@@ -8,6 +8,7 @@ document.querySelector('#loginSubmit').addEventListener('click', function(){
     document.querySelector('#buttonSubmit').innerHTML = '<i class="fa fa-spinner fa-spin">';
     
     var loginUrl  = document.querySelector('#loginUrl').value;
+    var mainPage  = document.querySelector('#mainPage').value;
 
     fetch(loginUrl, {
         method: 'POST', // or 'PUT'
@@ -20,7 +21,7 @@ document.querySelector('#loginSubmit').addEventListener('click', function(){
     document.querySelector('#buttonSubmit').innerHTML = 'Login';
     if(data['status'] === 'success'){
         document.querySelector('#loginFailed').style.display = "none";
-        window.location.href = "http://127.0.0.1:8000/gis/touristAttractions/";
+        window.location.href = mainPage;
     }else{
         document.querySelector('#loginFailed').style.display = "block";
     }
