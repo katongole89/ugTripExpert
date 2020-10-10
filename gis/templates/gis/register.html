@@ -30,7 +30,7 @@
       <div class="card-body p-0">
         <!-- Nested Row within Card Body -->
         <div class="row">
-          <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+          <div class="col-lg-5 d-none d-lg-block bg-register-image" style="background:url({% static 'gis/img/download.jpg' %}); background-position: center;background-size: cover;"></div>
           <div class="col-lg-7">
             <div class="p-5">
               <div class="text-center">
@@ -91,6 +91,10 @@
               -->
               <div class="text-center">
                 <a class="small" href="{% url 'gis:login' %}">Already have an account? Login!</a>
+
+
+
+                <button id="registerUrl" value = '{% url 'accounts:registerAuth' %}' style="display: none;"></button>
               </div>
             </div>
           </div>

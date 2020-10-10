@@ -13,7 +13,8 @@ document.querySelector('#registerButton').addEventListener('click', function(){
             'firstName': firstName,
             'lastName': lastName
         }
-        fetch('http://127.0.0.1:8000/accounts/registerAuth/', {
+        var registerUrl  = document.querySelector('#registerUrl').value;
+        fetch(registerUrl, {
         method: 'POST', // or 'PUT'
         headers: {
             'Content-Type': 'application/json',

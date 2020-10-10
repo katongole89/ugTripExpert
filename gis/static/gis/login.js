@@ -6,7 +6,10 @@ document.querySelector('#loginSubmit').addEventListener('click', function(){
         'password': password
     }
     document.querySelector('#buttonSubmit').innerHTML = '<i class="fa fa-spinner fa-spin">';
-    fetch('http://127.0.0.1:8000/gis/loginAuth/', {
+    
+    var loginUrl  = document.querySelector('#loginUrl').value;
+
+    fetch(loginUrl, {
         method: 'POST', // or 'PUT'
         headers: {
             'Content-Type': 'application/json',
