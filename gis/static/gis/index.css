@@ -1,0 +1,33 @@
+*{
+    margin: 0;
+    padding:0;
+}
+
+#infoHeading{
+    font-size: 25px;
+}
+
+#listPlaces{
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 90vh;
+}
+.padding-0{
+    padding-right:0;
+    padding-left:0;
+}
+.fa {
+    color: orange;
+  }
+.placeStyle{
+    background-color: white;
+    margin: 6px;
+    border-radius: 3px;
+}
+#viewButton{
+    margin: 2px;
+}
+#tourPlace{
+    border-color:#A9A9A9;
+    background-color:#f2f3f6;
+}
