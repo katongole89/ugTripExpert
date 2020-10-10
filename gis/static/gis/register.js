@@ -30,7 +30,8 @@ document.querySelector('#registerButton').addEventListener('click', function(){
                 document.querySelector("#accountCreated").style.display = "block";
                 setTimeout(function () {
                     document.querySelector("#accountCreated").style.display = "none";
-                    window.location.href = "http://127.0.0.1:8000/gis/login/";
+                    var loginUrl  = document.querySelector('#loginUrl').value;
+                    window.location.href = loginUrl;
                 }, 3000);
             }
             else if("email" in data){
