@@ -1,11 +1,43 @@
 document.querySelector('#loginSubmit').addEventListener('click', function(){
+    //reset
+    document.querySelector('#emailWrong').style.display = 'none';
+    document.querySelector('#loginFailed').style.display = "none";
+
+
+
     var email =document.querySelector('#emailValue').value;
     var password = document.querySelector('#passwordValue').value;
+    document.querySelector('#buttonSubmit').innerHTML = '<i class="fa fa-spinner fa-spin">';
+
+    email = email.trim();
+    password = password.trim();
+
+    var checkEmail1 = email.includes("@");
+    var checkEmail2 = email.includes(".com");
+    var checkEmail13 =email.includes(" ");
+    if(checkEmail1 && checkEmail2 && checkEmail13 === false){
+        var emailCheck = true;
+        
+    }else{
+        document.querySelector('#emailWrong').style.display = 'block';
+        document.querySelector('#buttonSubmit').innerHTML = 'Login';
+        return
+    }
+
+    var checkpassword = password.includes(" ");
+    if( checkpassword || password === ""){
+        document.querySelector('#passwordWrong').style.display = 'block';
+        document.querySelector('#buttonSubmit').innerHTML = 'Register Account';
+        return
+    }
+
+
+
+
     var data = {
         'email': email,
         'password': password
     }
-    document.querySelector('#buttonSubmit').innerHTML = '<i class="fa fa-spinner fa-spin">';
     
     var loginUrl  = document.querySelector('#loginUrl').value;
     var mainPage  = document.querySelector('#mainPage').value;

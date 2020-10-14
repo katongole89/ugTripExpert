@@ -22,6 +22,7 @@ urlpatterns = [
     path('gis/', include('gis.urls')),
     path('accounts/', include('accounts.urls')),
     path('', views.welcome, name = 'welcome'),
-    
+    path('accounts', views.welcome, name = 'welcome'),
+    path('accounts/', include('allauth.urls')),    
 
 ]

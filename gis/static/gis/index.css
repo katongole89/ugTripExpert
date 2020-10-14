@@ -27,7 +27,7 @@
 #viewButton{
     margin: 2px;
 }
-#tourPlace{
+.tourPlace{
     border-color:#A9A9A9;
     background-color:#f2f3f6;
 }

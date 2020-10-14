@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from rest_framework import status
-from .models import attractions, places, keys
+from .models import attractions, places, keys, favouritePlaces, favouriteTypes
 from .serializers import placesSerializer
 #from rest_framework.authtoken.models import Token
 #from rest_framework.authentication import TokenAuthentication
@@ -117,10 +117,13 @@ class touristPlaces(APIView):
 
 @login_required(login_url= '/gis/login/')
 def touristAttractions(request):
-    email = request.session.get('email')
-    getName = customUser.objects.get(email = email)
+    user = request.user
+    email = user.email
+    request.session['email']= email
+    getId = customUser.objects.get(email=email).id
     context ={
-        'getName': getName
+        'email': email,
+        'id': getId
     }
     return render(request, 'gis/index2.html', context)
 
@@ -142,6 +145,7 @@ class nearByPlaces(APIView):
         getPlace = places.objects.get(place_id = placeId)
         lat = getPlace.lat
         lng = getPlace.lng
+        name= getPlace.name
         aroundPlaces = ['restaurant', 'hotel', 'lodging', 'bar', 'car_rental', 'cafe', 'food', 'spa']
         allSpots = []
         for term in aroundPlaces:
@@ -176,7 +180,8 @@ class nearByPlaces(APIView):
                     nextPageToken = None
         data = {
             'coordinates':[lat, lng],
-            'places': allSpots
+            'places': allSpots,
+            'name': name
         }
         return JsonResponse(data, status = status.HTTP_200_OK)
 
@@ -184,7 +189,7 @@ class nearByPlaces(APIView):
 def placesAround(request, placeId):
     getPlace = places.objects.get(place_id = placeId)
     email = request.session.get('email')
-    getName = customUser.objects.get(email = email)
+    getId = customUser.objects.get(email= email).id
     getApiKey = keys.objects.filter(is_active = True)
     if not getApiKey:
         apiKey ="AIzaSyAXwPg_sSDRooMUKf21QjRnQR5f8sw8fpY"
@@ -196,8 +201,9 @@ def placesAround(request, placeId):
 
     context = {
         'getPlace': getPlace,
-        'getName': getName,
-        'mapsLink': mapsLink
+        'email': email,
+        'mapsLink': mapsLink,
+        'id': str(getId)
     }
     return render(request, 'gis/placeAroundDetail.html',context)
 
@@ -249,6 +255,7 @@ class registerAuth(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
 def _logout(request):
     logout(request)
     return redirect('/gis/login/')
@@ -268,3 +275,113 @@ class fetchKey(APIView):
 
 def welcome(request):
     return render(request, 'gis/welcome.html')
+
+class makeFavourite(APIView):
+    def get(self, request, placeId):
+        email = request.session.get('email')
+        #showId = customUser.objects.get(email=email)
+        #print(showId.id)
+        #email = 'katongolerichard089@gmail.com'
+
+
+        #check if ts already among favourites
+        checkPlace = favouritePlaces.objects.filter(place_id= placeId, email = email)
+        if checkPlace:
+            data = {
+                'details': 'place is already favourite'
+            }
+            return JsonResponse(data, status = status.HTTP_200_OK)
+
+        fields ='name,rating,vicinity,geometry,formatted_address,business_status,type,place_id'
+        getApiKey = keys.objects.filter(is_active = True)
+        if not getApiKey:
+            apiKey ="AIzaSyAXwPg_sSDRooMUKf21QjRnQR5f8sw8fpY"
+        for k in getApiKey:
+            apiKey = k.apiKey
+        url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id='+ placeId +'&fields='+ fields +'&key='+apiKey
+        r = requests.get(url)
+        results = r.json()
+        placeDetails = results['result']
+        lat = placeDetails['geometry']['location']['lat']
+        lng = placeDetails['geometry']['location']['lng']
+        allTypes = placeDetails['types']
+
+        if not 'business_status' in placeDetails :
+            business_status = 'OPERATIONAL'
+        else:
+            business_status = placeDetails['business_status']
+
+        if not 'rating' in placeDetails :
+            rating = '0'
+        else:
+            rating = placeDetails['rating']
+
+        savePlace = favouritePlaces(name= placeDetails['name'], email= email, place_id=placeDetails['place_id'],formatted_address=placeDetails['formatted_address'], rating=rating, business_status= business_status, lat=lat, lng=lng)
+        savePlace.save()
+
+        getPlace = favouritePlaces.objects.get(place_id= placeDetails['place_id'], email = email)
+
+        for placeType in allTypes:
+            addType = favouriteTypes(placeType= placeType, place= getPlace)
+            addType.save()
+
+        data ={
+            'status': 'success',
+            'detail': 'place added to favourites'
+        }
+        return JsonResponse(data, status= status.HTTP_200_OK)
+        
+@login_required(login_url= '/gis/login/')
+def favourites(request, id):
+    email = request.session.get('email')
+    
+    context = {
+        'email':email,
+        'id': id
+    }
+
+    return render(request, 'gis/fav.html', context)
+
+class fetchFavourite(APIView):
+    def get(self, request, id):
+        id =int(id)
+        getPerson = customUser.objects.get(id = id)
+        queryEmail = getPerson.email
+        getFavs = favouritePlaces.objects.filter(email= queryEmail)
+        if not getFavs:
+            data = {
+                'detail': 'no favs'
+            }
+            return JsonResponse(data, status = status.HTTP_200_OK)
+        allFavs = []
+        for fav in getFavs:
+            placeFav =[]
+            placeFav.append(fav.name)
+            placeFav.append(fav.place_id)
+            placeFav.append(fav.formatted_address)
+            placeFav.append(fav.rating)
+            placeFav.append(fav.business_status)
+            placeFav.append(fav.lat)
+            placeFav.append(fav.lng)
+            getTypes = favouriteTypes.objects.filter(place = fav)
+            allTypes = []
+            for typ in getTypes:
+                allTypes.append(typ.placeType)
+            placeFav.append(allTypes)
+
+            placeFav.append(str(fav.id))
+
+            allFavs.append(placeFav)
+
+        data = {
+            'favs':allFavs
+        }
+        return JsonResponse(data, status = status.HTTP_200_OK)
+
+class removeFav(APIView):
+    def get(self, request, id):
+        getFavPlace = favouritePlaces.objects.filter(id = int(id)).delete()
+        data ={
+            'detail': 'deleted'
+        }
+        return JsonResponse(data, status= status.HTTP_200_OK)

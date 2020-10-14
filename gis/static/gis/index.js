@@ -48,7 +48,6 @@ function initMap() {
               }
 
 
-
             }
 
             
@@ -75,23 +74,65 @@ function initMap() {
 
             var starturl = url.replace("touristPlaces", "placesAround");
             var detailUrl = 'href="' + starturl + innerArray['place_id'] + '/"';
-            console.log(detailUrl);
+
+            var favUrl = url.replace("touristPlaces", "makeFavourite");
+            favUrl = favUrl + innerArray['place_id'] + "/";            
+           
+            intI = i.toString();
+            placeClass = 'place'+ intI;
+            var favId = 'fav'+ intI;
+
+            const favThePlace = '#'+ favId;
 
             //create tourist sites list
-            var site = `<div class="row placeStyle" id = "tourPlace" class=""><div class="col-lg-12" id ="divName"><span><strong id ="nameOfPlace">${innerArray['name']}</strong></span><br><span>${stars} ${innerArray['rating']}</span><br><span style="margin-bottom: 3px;"><a ${detailUrl}><button type="button" class="btn btn-primary btn-sm" id = "viewPlaceInDetail" value =${innerArray['place_id']}>View Details</button></a></span><br></div><hr>`;
+            var site = `<div class="row placeStyle tourPlace" id="${placeClass}"><div class="col-lg-12" id ="divName"><span><strong id ="nameOfPlace">${innerArray['name']}</strong></span><br><span>${stars} ${innerArray['rating']}</span><br><span style="margin-bottom: 3px;" id="fav"><a ${detailUrl}><button type="button" class="btn btn-success btn-sm" id = "viewPlaceInDetail" value =${innerArray['place_id']}>View Details</button></a><button type="button" id=${favId} style="margin-left:8px;" class="btn btn-outline-primary btn-sm" value =${favUrl}>Add to favourites <i class="fas fa-heart" style ="color:red;"></i></button></span><br></div><hr>`;
             document.querySelector('#listPlaces').insertAdjacentHTML('beforeend', site);
 
+            var hoverDiv = '#'+ placeClass;
 
-
-
+            document.querySelector(hoverDiv).addEventListener('mouseover', function(){
+              infowindow.open(map, marker);
+            })
+            document.querySelector(hoverDiv).addEventListener('mouseout', function(){
+              infowindow.close();
+            })
 
 
         }
-
-    })
+		
+        listPlaces = document.getElementById('listPlaces')
+        allPlacesOnPage = listPlaces.querySelectorAll('.tourPlace')
   
-  
-    
-    
-  }
 
+        allPlacesOnPage.forEach(addFavToButtons);
+        function addFavToButtons(item, index){
+			let a = item.getElementsByTagName("div")[0].querySelectorAll('#fav')[0].getElementsByTagName("button")[1];
+			console.log(a);
+			let buttonValue = a.value;
+			a.addEventListener('click', function(){
+				a.innerHTML = '<i class="fa fa-spinner fa-spin" style="color:blue;">';
+				fetch(buttonValue)
+				.then(result => {
+					return result.json();
+				})
+				.then(data => {
+					if(data['status']=== 'success'){
+						a.innerHTML = 'Add to favourites <i class="fas fa-heart" style ="color:red;"></i>';
+						let dispFaved = document.querySelector('#faved')
+						dispFaved.style.display = 'block';
+						setTimeout(function () {
+							dispFaved.style.display = "none";
+						}, 3000);
+					}else{
+						a.innerHTML = 'Add to favourites <i class="fas fa-heart" style ="color:red;"></i>';
+						let dispNotFaved = document.querySelector('#alreadyFaved');
+						dispNotFaved.style.display = 'block';
+						setTimeout(function () {
+							dispNotFaved.style.display = "none";
+						}, 3000);
+					}
+				})
+			})
+		}
+	})
+}

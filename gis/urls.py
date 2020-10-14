@@ -29,9 +29,13 @@ urlpatterns = [
     path('register/', views.register, name = 'register'),
     path('loginAuth/', views.loginAuth, name = 'loginAuth'),
     path('touristPlaces/', views.touristPlaces.as_view(), name = 'touristPlaces'),
+    path('makeFavourite/<slug:placeId>/', views.makeFavourite.as_view(), name = 'makeFavourite'),
     path('fetchKey/', views.fetchKey.as_view(), name = 'fetchKey'),
     path('placesAround/<slug:placeId>/',views.placesAround, name='placesAround'),
     path('nearByPlaces/<slug:placeId>/',views.nearByPlaces.as_view(), name='nearByPlaces'),
+    path('favourites/<slug:id>/', views.favourites, name = 'favourites'),
+    path('fetchFavourite/<slug:id>/',views.fetchFavourite.as_view(), name='fetchFavourite'),
+    path('removeFav/<slug:id>/',views.removeFav.as_view(), name='removeFav'),
 
 ]
 urlpatterns= format_suffix_patterns(urlpatterns)

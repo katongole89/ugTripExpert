@@ -3,59 +3,41 @@ function initMap() {
     var urlNearByPlaces = document.querySelector('#urlNearByPlaces').value;
     urlNearByPlaces = urlNearByPlaces.replace("touristPlaces", "nearByPlaces");
     var url = urlNearByPlaces + placeId + '/';
+    var fetchFavs = document.querySelector('#fetchFavs').value;
+    console.log(fetchFavs);
     document.querySelector('#spinning').style.display = "block";
+
+    var fetchFavs = document.querySelector('#fetchFavs').value;
+    console.log(fetchFavs);
  
 
     //fetch data from the server
-    fetch(url)
+    fetch(fetchFavs)
     .then(result => {
         return result.json();
 
     })
     .then(data => {
       document.querySelector('#spinning').style.display = "none";
-      var centerLat = data['coordinates'][0];
-      var centerlng = data['coordinates'][1];
-      centerLat = parseFloat(centerLat);
-      centerlng = parseFloat(centerlng);
-      const uluru = { lat: centerLat, lng: centerlng };
+      const uluru = { lat:0.347596, lng:32.582520 };
       const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 11,
+        zoom: 7,
         center: uluru
       });
 
-      const marker = new google.maps.Marker({
-        position: uluru,
-        map,
-		title: "Uluru (Ayers Rock)",
-		label: { color: '#FFFFFF', fontWeight: 'bold', fontSize: '14px', text: data['name']  }
-        });
-
-        data = data['places'];
+        data = data['favs'];
 
         for (var i = 0; i < data.length; i++){
             const innerArray = data[i];
-            var wantedList =['restaurant', 'food', 'lodging', 'bar', 'spa']
-            for (var m = 0; m < wantedList.length; m++) {
-              var typeExist = innerArray['types'].includes(wantedList[m]);
-              if (typeExist){
-                var exists = true;
-                break;
-              }else{
-                exists = false;
-              }
-            }
-            if (exists === false ){
-              continue;
-            }
+           
             //console.log(innerArray['name']);
-            const lat = innerArray['geometry']['location']['lat']
-            const lng = innerArray['geometry']['location']['lng']
+            const lat = innerArray[5]
+            const lng = innerArray[6]
             const locale = {lat: parseFloat(lat), lng: parseFloat(lng)};
 
             //rating star string
             var stars = "";
-            var placeRating = parseFloat(innerArray['rating']);
+            var placeRating = parseFloat(innerArray[3]);
            
             if (placeRating <= 0.99){
               stars = stars + '<span class="fas fa-star-half-alt" style ="color:orange;"></span>'
@@ -81,7 +63,7 @@ function initMap() {
               stars = '<span>Not yet Rated</span>';
             }
 
-            var typesPlace = innerArray['types'];
+            var typesPlace = innerArray[7];
             var services ="";
             for (var k = 0; k < typesPlace.length; k++) {
               services = services + "<li>"+ typesPlace[k]+"</li>"
@@ -89,15 +71,11 @@ function initMap() {
             }
             services = '<div><span><strong>Place Category</strong></span><ul style="margin-left:10px;">'+ services +'</ul><div>'
 
-            var theRating = '';
-            if(Number.isNaN(placeRating)){
-              theRating = '';
-            }else{
-              theRating = innerArray['rating'];
-            }
+            
+              theRating = innerArray[3];
             
         
-            const contentString = '<div id="infoWindow"><div><div id="infoHeading"><strong>'+ innerArray['name']+'</strong></div><div id="infoRating">'+ stars + ' '+ theRating +'</div></div></div>';
+            const contentString = '<div id="infoWindow"><div><div id="infoHeading"><strong>'+ innerArray[0]+'</strong></div><div id="infoRating">'+ stars + ' '+ theRating +'</div></div></div>';
             
         
         
@@ -122,8 +100,8 @@ function initMap() {
               });
 			
 			
-            var favUrl = urlNearByPlaces.replace("nearByPlaces", "makeFavourite");
-            favUrl = favUrl + innerArray['place_id'] + "/";            
+            var favUrl = urlNearByPlaces.replace("nearByPlaces", "removeFav");
+            favUrl = favUrl + innerArray[8] + "/";            
            
 			intI = i.toString();
 			var placeClass = 'place'+ intI;
@@ -132,7 +110,7 @@ function initMap() {
             const favThePlace = '#'+ favId;
 
             //create tourist sites list
-            var site = '<div class="row placeStyle tourPlace" id ="'+ placeClass +'"><div class="col-lg-3"><img src='+ innerArray['icon']+' alt="Girl in a jacket" style="width:100%; height:100%;"></div><div class="col-lg-9" id ="divName"><span><strong id ="nameOfPlace">' + innerArray['name'] + '</strong></span><br><span>' + stars+ ' '+ theRating + '</span><br><span style="margin-bottom: 3px;" id="fav"><a id ="'+ innerArray['place_id'] + '"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModal'+ i + '">View Details</button></a><button type="button" id="'+ favId +'" style="margin-left:8px;" class="btn btn-outline-primary btn-sm" value ="'+ favUrl +'">Add favourite <i class="fas fa-heart" style ="color:red;"></i></button><!-- Modal --><div class="modal fade" id="exampleModal'+ i + '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="exampleModalLabel"><strong>'+ innerArray['name']+'</strong></h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body"><span>Vicinity: '+ innerArray['vicinity'] +'</span><br><span>Current Status: '+ innerArray['business_status']+'</span><br><span>'+ services +'</span><br><span>'+ stars+'</span></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div></div></div></div></span><br></div><hr>';
+            var site = '<div class="row placeStyle tourPlace" id ="'+ placeClass +'"><div class="col-lg-12" id ="divName"><span><strong id ="nameOfPlace">' + innerArray[0] + '</strong></span><br><span>' + stars+ ' '+ theRating + '</span><br><span style="margin-bottom: 3px;" id="fav"><a id ="'+ innerArray[1] + '"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModal'+ i + '">View Details</button></a><button type="button" id="'+ favId +'" style="margin-left:8px;" class="btn btn-outline-primary btn-sm" value ="'+ favUrl +'">Remove favourite <i class="fas fa-heart-broken" style ="color:black;"></i></button><!-- Modal --><div class="modal fade" id="exampleModal'+ i + '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="exampleModalLabel"><strong>'+ innerArray[0]+'</strong></h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body"><br><span>Current Status: '+ innerArray[4]+'</span><br><span>'+ services +'</span><br><span>'+ stars+'</span></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div></div></div></div></span><br></div><hr>';
 			document.querySelector('#listPlaces').insertAdjacentHTML('beforeend', site);
 			
 			var hoverDiv = '#'+ placeClass;
@@ -144,14 +122,6 @@ function initMap() {
               infowindow.close();
             })
 
-
-
-
-		
-		
-		
-		
-		
 		
 		}
 
@@ -161,7 +131,7 @@ function initMap() {
 
 		allPlacesOnPage.forEach(addFavToButtons);
 		function addFavToButtons(item, index){
-			let a = item.getElementsByTagName("div")[1].querySelectorAll('#fav')[0].getElementsByTagName("button")[1];
+			let a = item.getElementsByTagName("div")[0].querySelectorAll('#fav')[0].getElementsByTagName("button")[1];
 			console.log(a);
 			let buttonValue = a.value;
 			a.addEventListener('click', function(){
@@ -171,8 +141,9 @@ function initMap() {
 				return result.json();
 			  })
 			  .then(data => {
-				if(data['status']=== 'success'){
-				  a.innerHTML = 'Add favourite <i class="fas fa-heart" style ="color:red;"></i>';
+				if(data['detail']=== 'deleted'){
+                  //a.innerHTML = 'Add favourite <i class="fas fa-heart" style ="color:red;"></i>';
+                  item.style.display = "none";
 				  let dispFaved = document.querySelector('#faved')
 				  dispFaved.style.display = 'block';
 				  setTimeout(function () {

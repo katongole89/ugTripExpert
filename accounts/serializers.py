@@ -1,12 +1,14 @@
 from rest_framework import serializers
 from .models import customUser
 
-class registrationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = customUser
-        fields = '__all__'
-        extra_kwargs = {
-            'password': {'write_only': True}
+class registrationSerializer(serializers.Serializer):
+    email = serializers.CharField(max_length= 50)
+    firstName = serializers.CharField(max_length= 50)
+    lastName = serializers.CharField(max_length= 50)
+    password = serializers.CharField(max_length=200)
+       
+    extra_kwargs = {
+        'password': {'write_only': True}
         }
 
     def save(self):

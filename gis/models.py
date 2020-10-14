@@ -26,3 +26,23 @@ class keys(models.Model):
     is_active = models.BooleanField(default= False)
     def __str__(self):
         return self.apiKey + '--'+ str(self.is_active)
+
+class favouritePlaces(models.Model):
+    name= models.CharField(max_length= 200, blank=False)
+    email = models.CharField(max_length= 200, blank=False)
+    place_id = models.CharField(max_length= 200, blank=False)
+    formatted_address = models.CharField(max_length= 200, blank=True)
+    rating = models.CharField(max_length= 200, blank=True)
+    business_status = models.CharField(max_length= 200, blank=True)
+    lat = models.CharField(max_length= 200, blank=False)
+    lng = models.CharField(max_length= 200, blank=False)
+
+    def __str__(self):
+        return self.email + '--'+ self.name
+
+class favouriteTypes(models.Model):
+    placeType = models.CharField(max_length= 200, blank=True)
+    place = models.ForeignKey(favouritePlaces, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.place.email + '--'+ self.placeType

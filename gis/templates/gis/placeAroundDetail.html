@@ -96,12 +96,12 @@
             {% if getName != "" %}
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">logged in as {{getName.firstName}} {{getName.lastName}}</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">logged in as {{email}}</span>
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="{% url 'gis:favourites' id %}">
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                   favourite places
                 </a>
@@ -152,7 +152,17 @@
             </div>
                   
                 </div>
+
                 <!-- Card Body -->
+                <div class="alert alert-success" role="alert" style="display: none; margin-left: 5px; margin-right:5px; margin-top:5px;" id="faved">
+                  place added to favourites
+                </div>
+                <div class="alert alert-danger" role="alert" style="display: none; margin-left: 5px; margin-right:5px; margin-top:5px;" id="alreadyFaved">
+                  place already among favourites
+                </div>
+
+
+
                 <div class="card-body">
                   <div class="chart-area" id="listPlaces">
                     <span style="display: none;" id="spinning"><i class="fa fa-spinner fa-spin" style="font-size: 80px;"></i></span>
@@ -207,7 +217,7 @@
         input = document.getElementById('searchInput')
         filter = input.value.toUpperCase();
         listPlaces = document.getElementById('listPlaces')
-        allPlacesOnPage = listPlaces.querySelectorAll('#tourPlace')
+        allPlacesOnPage = listPlaces.querySelectorAll('.tourPlace')
         
         for (i = 0; i < allPlacesOnPage.length; i++) {
           a = allPlacesOnPage[i].getElementsByTagName("div")[1].getElementsByTagName("span")[0].getElementsByTagName("strong")[0];

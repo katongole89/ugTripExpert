@@ -1,3 +1,5 @@
+{% load socialaccount %}
+{% providers_media_js %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,7 +15,7 @@
   {% load static %}
 
   <!-- Custom fonts for this template-->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="{% static 'gis/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -47,23 +49,29 @@
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
                     <input type="text" class="form-control form-control-user" id="firstNameValue" placeholder="First Name">
+                    <span style="color: red; display:none;" id="firstNameWrong">Incorrect first name</span>
                   </div>
                   <div class="col-sm-6">
                     <input type="text" class="form-control form-control-user" id="lastNameValue" placeholder="Last Name">
+                    <span style="color: red; display:none;" id="lastNameWrong">Incorrect last name</span>
                   </div>
                 </div>
                 <div class="form-group">
                   <input type="email" class="form-control form-control-user" id="emailValue" placeholder="Email Address">
+                  <span style="color: red; display:none;" id="emailWrong">Provide a correct email</span>
                 </div>
+                
                 <div class="alert alert-danger" role="alert" id="emailExists" style="display: none;">
                   Email Already exists to a certain account
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
                     <input type="password" class="form-control form-control-user" id="passwordValue" placeholder="Password">
+                    <span style="color: red; display:none;" id="passwordWrong">Provide a valid password</span>
                   </div>
                   <div class="col-sm-6">
                     <input type="password" class="form-control form-control-user" id="passwordRepeatValue" placeholder="Repeat Password">
+                    <span style="color: red; display:none;" id="passwordRepeatWrong">Provide a valid password</span>
                   </div>
                   <div class="col-sm-12">
                     <span style="color: red; display:none;" id="matchFailed" >Passwords did not match</span>
@@ -77,14 +85,17 @@
 
                 <!---->
                 <hr>
-                <a href="#" class="btn btn-google btn-user btn-block">
+                <a href="{% provider_login_url "google" %}" class="btn btn-google btn-user btn-block">
                   <i class="fab fa-google fa-fw"></i> Register with Google
                 </a>
+                <!--
                 <a href="#" class="btn btn-facebook btn-user btn-block">
                   <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
                 </a>
+                -->
             
               <hr>
+              <!--
               <div class="text-center">
                 <a class="small" href="#">Forgot Password?</a>
               </div>
@@ -113,7 +124,6 @@
   <script src="{% static 'gis/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="{% static 'gis/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
   <!-- Custom scripts for all pages-->

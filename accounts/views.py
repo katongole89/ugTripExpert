@@ -36,8 +36,7 @@ class registerAuth(APIView):
             account = serializer.save()
             
             data = {
-                "status": "success",
+                "status": "success"
                 }
             return JsonResponse(data, status = status.HTTP_201_CREATED)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
