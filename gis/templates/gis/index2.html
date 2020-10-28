@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Tourist Attractions</title>
+  <title>Forest Reserves Map View</title>
 
   {% load static %}
   <style>
@@ -54,7 +54,7 @@
       <div id="content">
 
         <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow customColorHead">
 
           <!-- Sidebar Toggle (Topbar) -->
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -62,7 +62,7 @@
           </button>
 
           <!-- Topbar Search -->
-          <h1 class="m-0 font-weight-bold text-primary" style="font-family:Lobster ;">UgTripExpert</h1>
+          <h1 class="m-0 font-weight-bold text-primary customColorTitle" style="font-family:Lobster ;">NFA Eco tours</h1>
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
@@ -78,7 +78,7 @@
                   <div class="input-group">
                     <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
                     <div class="input-group-append">
-                      <button class="btn btn-primary" type="button">
+                      <button class="btn btn-primary customSearchColor" type="button">
                         <i class="fas fa-search fa-sm"></i>
                       </button>
                     </div>
@@ -97,7 +97,7 @@
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Logged in as {{email}}</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small customColorLogged">Logged in as {{email}}</span>
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -124,8 +124,9 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800" style="font-size: 20px;">Tourist Attractions</h1>
+            <h1 class="h3 mb-0 text-gray-800 customColorTourist" style="font-size: 20px;">Forest Reserves</h1>
           </div>
+          
 
           <!-- Content Row -->
           
@@ -144,7 +145,7 @@
                   <div class="input-group">
               <input type="text" class="form-control bg-light border-0 small" placeholder="Search for place..." id="searchInput" onkeyup="searchFunc()" aria-label="Search" aria-describedby="basic-addon2">
               <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
+                <button class="btn btn-primary customSearchColor" type="button">
                   <i class="fas fa-search fa-sm"></i>
                 </button>
               </div>
@@ -189,6 +190,7 @@
 
                     <button id="urlPlaces" value = '{% url 'gis:touristPlaces' %}' style="display: none;"></button>
                     <button id="urlNearByPlaces" value = '{% url 'gis:touristPlaces' %}' style="display: none;"></button>
+                    <button id="allPlacesInDb" value = '{% url 'gis:allPlacesInDb' %}' style="display: none;"></button>
 
 
                   

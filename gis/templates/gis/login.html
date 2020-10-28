@@ -23,6 +23,7 @@
 
   <!-- Custom styles for this template-->
   <link href="{% static 'gis/css/sb-admin-2.min.css' %}" rel="stylesheet" />
+  <link href="{% static 'gis/login.css' %}" rel="stylesheet" />
 
 </head>
 
@@ -39,7 +40,7 @@
           <div class="card-body p-0">
             <!-- Nested Row within Card Body -->
             <div class="row">
-              <div class="col-lg-6 d-none d-lg-block bg-login-image" style="background:url({% static 'gis/img/download.jpg' %}); background-position: center;background-size: cover;"></div>
+              <div class="col-lg-6 d-none d-lg-block bg-login-image" style="background:url({% static 'gis/welcome/upload/shutterstock_133689230.jpg' %}); background-position: center;background-size: cover;"></div>
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="text-center">
@@ -78,7 +79,8 @@
                     -->
 
                   <button id="loginUrl" value = '{% url 'gis:loginAuth' %}' style="display: none;"></button>
-                  <button id="mainPage" value = '{% url 'gis:touristAttractions' %}' style="display: none;"></button>
+                  <button id="mainPage" value = '{% url 'gis:home' %}' style="display: none;"></button>
+
 
 
                   
@@ -92,6 +94,7 @@
                     <a class="small" href="{% url 'gis:register' %}">Create an Account!</a>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>

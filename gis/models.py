@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 class attractions(models.Model):
     name= models.CharField(max_length= 200, blank=False)
+    placeType = models.CharField(max_length= 200, default='')
 
     def __str__(self):
         return self.name
@@ -46,3 +47,21 @@ class favouriteTypes(models.Model):
     
     def __str__(self):
         return self.place.email + '--'+ self.placeType
+
+class forestsDetailed(models.Model):
+    name= models.CharField(max_length= 200, blank=False)
+    contactInfo= models.TextField(blank=True)
+    areaCoverage= models.TextField(blank=True)
+    attractions= models.TextField(blank=True)
+    accomodation= models.TextField(blank=True)
+    accessibility= models.TextField(blank=True)
+    activities= models.TextField(blank=True)
+    def __str__(self):
+        return self.name 
+        
+class forestsImages(models.Model):
+    forest = models.ForeignKey(forestsDetailed, on_delete=models.CASCADE)
+    image = models.ImageField(verbose_name='forest image', blank= False)
+    def __str__(self):
+        return self.forest.name 
+    

@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 #from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -29,6 +29,7 @@ urlpatterns = [
     path('register/', views.register, name = 'register'),
     path('loginAuth/', views.loginAuth, name = 'loginAuth'),
     path('touristPlaces/', views.touristPlaces.as_view(), name = 'touristPlaces'),
+    path('allPlacesInDb/', views.allPlacesInDb.as_view(), name = 'allPlacesInDb'),
     path('makeFavourite/<slug:placeId>/', views.makeFavourite.as_view(), name = 'makeFavourite'),
     path('fetchKey/', views.fetchKey.as_view(), name = 'fetchKey'),
     path('placesAround/<slug:placeId>/',views.placesAround, name='placesAround'),
@@ -36,6 +37,10 @@ urlpatterns = [
     path('favourites/<slug:id>/', views.favourites, name = 'favourites'),
     path('fetchFavourite/<slug:id>/',views.fetchFavourite.as_view(), name='fetchFavourite'),
     path('removeFav/<slug:id>/',views.removeFav.as_view(), name='removeFav'),
+    path('home/', views.home, name = 'home'),
+    path('allForests/',views.allForests.as_view(), name='allForests'),
+    re_path(r'^reserveDetailed/(?P<id>[0-9]+)/$', views.reserveDetailed, name='reserveDetailed' ),
+    
 
 ]
 urlpatterns= format_suffix_patterns(urlpatterns)

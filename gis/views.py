@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from rest_framework import status
-from .models import attractions, places, keys, favouritePlaces, favouriteTypes
+from .models import attractions, places, keys, favouritePlaces, favouriteTypes,forestsImages, forestsDetailed
 from .serializers import placesSerializer
 #from rest_framework.authtoken.models import Token
 #from rest_framework.authentication import TokenAuthentication
@@ -22,6 +22,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from accounts.models import customUser
 from django.contrib.auth.decorators import login_required
+import time
 
 # Create your views here.
 
@@ -50,35 +51,55 @@ class addPlaces(APIView):
             #next page token
             #nextPageToken = placesData['next_page_token']
             allPlaces = []
-            allPlaces.append(placesData['results'])
+            dataToAppend = {
+                'placeType': tourTerm.placeType,
+                'placeList': placesData['results']
+            }
+            allPlaces.append(dataToAppend)
             if 'next_page_token' in placesData:
                 nextPageToken = placesData['next_page_token']
-            nextPageToken = None
+                time.sleep(5)
+            else:
+                nextPageToken = None
             count = 0
             while nextPageToken != None:
-                url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key="+ apiKey+"&pagetoken="+ nextPageToken
+                url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key="+apiKey+"&pagetoken="+ nextPageToken
+                print(url)
 
                 r = requests.get(url)
                 placesData = r.json()
-                placesData = json.loads(placesData)
-                allPlaces.append(placesData['results'])
+                #placesData = json.loads(placesData)
+                print(placesData)
+                dataToAppend = {
+                    'placeType': tourTerm.placeType,
+                    'placeList': placesData['results']
+                    }
+                
+                #placesData = json.loads(placesData)
+                allPlaces.append(dataToAppend)
 
                 if 'next_page_token' in placesData:
                     nextPageToken = placesData['next_page_token']
-                nextPageToken = None
+                    time.sleep(5)
+                    
+                else:
+                    nextPageToken = None
+                    print(nextPageToken)
                 count+=1
-            print("--count--")
-            print(nameTerm)
-            print(count)
+                print("--count--")
+                print(nameTerm)
+                print(count)
+            
 
             
             #before saving
             #eliminate tours and travels
             #eliminate same name
             for resultBatch in allPlaces:
-                for place in resultBatch:
+                placeType= resultBatch['placeType']
+                for place in resultBatch['placeList']:
                     name =  place['name']
-                    if "tours and travels" in name or 'ltd' in name:
+                    if "tours and travels" in name or 'ltd' in name :
                         continue
                     #check existance
                     checkName = places.objects.filter(name = name)
@@ -86,7 +107,11 @@ class addPlaces(APIView):
                         continue
                     place_id = place['place_id']
                     formatted_address = place['formatted_address']
-                    rating = place['rating']
+                    #rating = place['rating']
+                    if 'rating' in place:
+                        rating = place['rating']
+                    else:
+                        rating = '' 
                     if 'business_status' in place:
                         business_status = place['business_status']
                     else:
@@ -94,7 +119,7 @@ class addPlaces(APIView):
                     lat = place['geometry']['location']['lat']
                     lng = place['geometry']['location']['lng']
                     icon = place['icon']
-                    addPlace = places(name = name, place_id = place_id, formatted_address = formatted_address, rating = rating, business_status = business_status, lat = lat, lng =lng,icon = icon, placeType = 'tourist_attraction')
+                    addPlace = places(name = name, place_id = place_id, formatted_address = formatted_address, rating = rating, business_status = business_status, lat = lat, lng =lng,icon = icon, placeType = placeType)
                     addPlace.save()
 
 
@@ -106,6 +131,17 @@ class addPlaces(APIView):
 
 class touristPlaces(APIView):
     def get(self, request):
+        getAttractions = places.objects.filter(placeType= 'forest_reserve')
+        if getAttractions:
+            serializer = placesSerializer(getAttractions, many=True)
+            return Response(serializer.data, status= status.HTTP_200_OK)
+        data = {
+            'detail': 'no places are registered yet'
+        }
+        return JsonResponse(data, status = status.HTTP_200_OK)
+
+class allPlacesInDb(APIView):
+    def get(self, request):
         getAttractions = places.objects.all()
         if getAttractions:
             serializer = placesSerializer(getAttractions, many=True)
@@ -115,11 +151,10 @@ class touristPlaces(APIView):
         }
         return JsonResponse(data, status = status.HTTP_200_OK)
 
+
 @login_required(login_url= '/gis/login/')
 def touristAttractions(request):
-    user = request.user
-    email = user.email
-    request.session['email']= email
+    email = request.session.get('email')
     getId = customUser.objects.get(email=email).id
     context ={
         'email': email,
@@ -385,3 +420,58 @@ class removeFav(APIView):
             'detail': 'deleted'
         }
         return JsonResponse(data, status= status.HTTP_200_OK)
+
+@login_required(login_url= '/gis/login/')
+def home(request):
+    user = request.user
+    email = user.email
+    request.session['email']= email
+    getId = customUser.objects.get(email=email).id
+    context = {
+        'email': email,
+        'id': getId
+    }
+    return render(request, 'gis/home.html', context)
+
+class allForests(APIView):
+    def get(self, request):
+        getForests = forestsDetailed.objects.all()
+        forestsInDb = []
+        for forest in getForests:
+            forestDets = []
+            forestDets.append(forest.id)
+            forestDets.append(forest.name)
+
+            getImages = forestsImages.objects.filter(forest= forest)
+            if getImages:
+                allImages = []
+                for image in getImages:
+                    allImages.append(image.image.url)
+            else:
+                allImages = []
+            forestDets.append(allImages)
+            forestsInDb.append(forestDets)
+        
+        data = {
+            'forests': forestsInDb
+        }
+        return JsonResponse(data, status = status.HTTP_200_OK)
+
+@login_required(login_url= '/gis/login/')
+def reserveDetailed(request, id):
+    email = request.session.get('email')
+    getId = customUser.objects.get(email=email).id
+    getReserve = forestsDetailed.objects.get(id = id)
+    #get photos
+    getPhotos = forestsImages.objects.filter(forest= getReserve)
+    photos = []
+    for img in getPhotos:
+        photos.append(img.image.url)
+    context ={
+        'id': getId,
+        'email': email,
+        'reserve': getReserve,
+        'photos': photos
+    }
+    return render(request, 'gis/reserveDetailed.html', context)
+        

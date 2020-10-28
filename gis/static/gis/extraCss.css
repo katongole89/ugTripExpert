@@ -1,8 +1,25 @@
-.toast{
-    position: fixed;
-    top:20px;
-    left:0;
-    right: 0;
-    margin: auto;
-    max-width: 480px;
+.customColorHead{
+    background-color: #69c082!important;
+}
+.customColorTitle{
+    color: white!important;
+}
+.customColorLogged{
+    color: white!important;
+}
+.customSearchColor{
+    background-color: #69c082!important;
+    border-color: #69c082!important;
+
+}
+.customColorTourist{
+    color:#69c082!important;
+    font-weight: bold;
+}
+.customColorFav{
+    color:#69c082!important;
+}
+.customColorFavBtn{
+    border-color: orange!important;
+    border-width: medium;
 }

@@ -1,0 +1,25 @@
+@media screen and (min-width: 1200px){
+    .col-xl-3{
+        max-width: 23%;
+    }
+}
+
+img{
+    height: 30vh;
+    margin-bottom: 3px;
+}
+.imgOther{
+    border: 1px solid #f2f3f6;
+    margin: 7px;
+    border-radius: 10px;
+    background-color:#f2f3f6 ;
+    transition: 1s;
+}
+
+fieldset{
+    padding: 10px;
+}
+.greenBtn{
+    background-color: #69c082!important;
+    border-color: #69c082!important;
+}
