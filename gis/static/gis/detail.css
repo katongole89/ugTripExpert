@@ -16,3 +16,7 @@
     max-width: 100%;
     height: 30vh;
 }
+.greenBtn{
+    background-color: #69c082;
+    border-color: #69c082;
+}

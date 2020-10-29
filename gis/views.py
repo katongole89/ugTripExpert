@@ -385,7 +385,8 @@ class fetchFavourite(APIView):
         getFavs = favouritePlaces.objects.filter(email= queryEmail)
         if not getFavs:
             data = {
-                'detail': 'no favs'
+                'detail': 'no favs',
+                'favs':[]
             }
             return JsonResponse(data, status = status.HTTP_200_OK)
         allFavs = []

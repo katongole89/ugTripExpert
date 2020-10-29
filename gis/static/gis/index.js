@@ -96,11 +96,24 @@ function CenterControl(controlDiv, map) {
               var marker = new google.maps.Marker({
                 position: placeCord,
                 map,
-                title: "Uluru (Ayers Rock)",
+                title:item["name"] ,
+                labelOrigin: new google.maps.Point(9, 9),
                 icon: {
                   url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                 }
               });
+              var contentString = '<div>'+ item["name"] +'</div>'
+              var infowindow = new google.maps.InfoWindow({
+                content: contentString,
+                maxWidth: 250
+                });
+
+                marker.addListener("mouseover", () => {
+                  infowindow.open(map, marker);
+                  });
+                marker.addListener("mouseout", () => {
+                  infowindow.close();
+                  });
 
               infoMarkers.push(marker);
               console.log(infoMarkers);
@@ -145,6 +158,19 @@ function CenterControl(controlDiv, map) {
                 }
               });
 
+              var contentString = '<div>'+ item["name"] +'</div>'
+              var infowindow = new google.maps.InfoWindow({
+                content: contentString,
+                maxWidth: 250
+                });
+
+                marker.addListener("mouseover", () => {
+                  infowindow.open(map, marker);
+                  });
+                marker.addListener("mouseout", () => {
+                  infowindow.close();
+                  });
+
               nationalParksMarkers.push(marker);
               console.log(infoMarkers);
 
@@ -180,9 +206,21 @@ function CenterControl(controlDiv, map) {
                 map,
                 title: item["name"],
                 icon: {
-                  url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                  url: "http://maps.google.com/mapfiles/ms/icons/pink-dot.png"
                 }
               });
+              var contentString = '<div>'+ item["name"] +'</div>'
+              var infowindow = new google.maps.InfoWindow({
+                content: contentString,
+                maxWidth: 250
+                });
+
+                marker.addListener("mouseover", () => {
+                  infowindow.open(map, marker);
+                  });
+                marker.addListener("mouseout", () => {
+                  infowindow.close();
+                  });
               restaurantMarkers.push(marker);
             }
           }
@@ -212,9 +250,21 @@ function CenterControl(controlDiv, map) {
                 map,
                 title: item["name"],
                 icon: {
-                  url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                  url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
                 }
               });
+              var contentString = '<div>'+ item["name"] +'</div>'
+              var infowindow = new google.maps.InfoWindow({
+                content: contentString,
+                maxWidth: 250
+                });
+
+                marker.addListener("mouseover", () => {
+                  infowindow.open(map, marker);
+                  });
+                marker.addListener("mouseout", () => {
+                  infowindow.close();
+                  });
               ecoLodgesMarkers.push(marker);
             }
           }
@@ -244,9 +294,21 @@ function CenterControl(controlDiv, map) {
                 map,
                 title: item["name"],
                 icon: {
-                  url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                  url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"
                 }
               });
+              var contentString = '<div>'+ item["name"] +'</div>'
+              var infowindow = new google.maps.InfoWindow({
+                content: contentString,
+                maxWidth: 250
+                });
+
+                marker.addListener("mouseover", () => {
+                  infowindow.open(map, marker);
+                  });
+                marker.addListener("mouseout", () => {
+                  infowindow.close();
+                  });
               hospitalsMarkers.push(marker);
             }
           }
@@ -276,10 +338,23 @@ function CenterControl(controlDiv, map) {
                 position: placeCord,
                 map,
                 title: item["name"],
+                label: {text: 'P', color: "white",fontWeight: "bold"},
                 icon: {
                   url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                 }
               });
+              var contentString = '<div>'+ item["name"] +'</div>'
+              var infowindow = new google.maps.InfoWindow({
+                content: contentString,
+                maxWidth: 250
+                });
+
+                marker.addListener("mouseover", () => {
+                  infowindow.open(map, marker);
+                  });
+                marker.addListener("mouseout", () => {
+                  infowindow.close();
+                  });
               policeMarkers.push(marker);
             }
           }
@@ -323,7 +398,7 @@ function measureDistance(controlDiv,map){
   controlUI.title = "Click to recenter the map";
   controlDiv.appendChild(controlUI);
 
-  let content = '<button>Add ruler</button> <button>remove ruler</button>';
+  let content = '<button type="button" class="btn btn-success btn-sm customSearchColor">Add ruler</button>  <button type="button" class="btn btn-danger btn-sm ">remove ruler</button>';
 
   var controlText = document.createElement('div');
   controlText.style.color = 'rgb(25,25,25)';
@@ -341,7 +416,7 @@ function measureDistance(controlDiv,map){
   console.log(addRule);
   addRule.addEventListener('click', addruler);
   let ruleMarks = [];
-  let yellowMark;
+  let yellowMark = [];
   let removeRule = controlText.getElementsByTagName('button')[1];
   removeRule.addEventListener('click', removeRuler);
 
@@ -349,34 +424,56 @@ function measureDistance(controlDiv,map){
     ruleMarks.forEach(removeInfoCentre);
     function removeInfoCentre(item, index){
       item.setMap(null);
-      yellowMark.style.display = 'none';
+    }
+    yellowMark.forEach(removeYellowMark);
+    function removeYellowMark(item, index){
+      item.onRemove();
     }
 
   }
-
-  
 
 
   function addruler() {
  
     ruler1 = new google.maps.Marker({
-        position: map.getCenter() ,
+        //position: map.getCenter() ,
+        position:{ lat: -0.98876953, lng: 32.98095703 },
         map: map,
         draggable: true
     });
 
+    let contentString = '<div>Drag to measure</div>'
+    let infowindow = new google.maps.InfoWindow({
+      content: contentString,
+      maxWidth: 250
+      });
+ 
+    infowindow.open(map, ruler1);
+
     ruleMarks.push(ruler1);
  
     ruler2 = new google.maps.Marker({
-        position: map.getCenter() ,
+        //position: map.getCenter() ,
+        position:{ lat: -0.9876953, lng: 33.98095703 },
         map: map,
         draggable: true
     });
+
+    contentString = '<div>Drag to measure</div>'
+    infowindow = new google.maps.InfoWindow({
+      content: contentString,
+      maxWidth: 250
+      });
+
+    infowindow.open(map, ruler2);
 
     ruleMarks.push(ruler2)
  
     var ruler1label = new Label({ map: map });
     var ruler2label = new Label({ map: map });
+    yellowMark.push(ruler1label);
+    yellowMark.push(ruler2label);
+
     ruler1label.bindTo('position', ruler1, 'position');
     ruler2label.bindTo('position', ruler2, 'position');
  
@@ -454,8 +551,7 @@ function Label(opt_options) {
 	var div = this.div_ = document.createElement('div');
 	div.appendChild(span);
   div.style.cssText = 'position: absolute; display: none';
-  yellowMark= div;
-  console.log(yellowMark);
+  
   
 };
 Label.prototype = new google.maps.OverlayView;
@@ -504,7 +600,8 @@ function initMap() {
     const uluru = { lat: 0.347596, lng: 32.582520 };
     const map = new google.maps.Map(document.getElementById("map"), {
       zoom: 7,
-      center: uluru
+      center: uluru,
+      scaleControl: true,
     });
 
   const centerControlDiv = document.createElement("div");
