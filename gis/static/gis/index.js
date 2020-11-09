@@ -602,6 +602,7 @@ function initMap() {
       zoom: 7,
       center: uluru,
       scaleControl: true,
+      streetViewControl: true,
     });
 
   const centerControlDiv = document.createElement("div");

@@ -48,8 +48,8 @@ function measureDistance(controlDiv,map){
   function addruler() {
  
     ruler1 = new google.maps.Marker({
-        //position: map.getCenter() ,
-        position:{ lat: -0.98876953, lng: 32.98095703 },
+        position: map.getCenter() ,
+        //position:{ lat: -0.98876953, lng: 32.98095703 },
         map: map,
         draggable: true
     });
@@ -65,8 +65,8 @@ function measureDistance(controlDiv,map){
     ruleMarks.push(ruler1);
  
     ruler2 = new google.maps.Marker({
-        //position: map.getCenter() ,
-        position:{ lat: -0.9876953, lng: 33.98095703 },
+        position: map.getCenter() ,
+        //position:{ lat: -0.9876953, lng: 33.98095703 },
         map: map,
         draggable: true
     });
@@ -230,7 +230,7 @@ function initMap() {
       centerlng = parseFloat(centerlng);
       const uluru = { lat: centerLat, lng: centerlng };
       const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 7,
+        zoom: 11,
         center: uluru
       });
 
@@ -243,7 +243,7 @@ function initMap() {
         position: uluru,
         map,
 		title: "Uluru (Ayers Rock)",
-		label: { color: '#FFFFFF', fontWeight: 'bold', fontSize: '14px', text: data['name']  }
+		label: { color: '	#008000', fontWeight: 'bold', fontSize: '14px', text: data['name']  }
         });
 
         data = data['places'];
@@ -347,7 +347,7 @@ function initMap() {
             const favThePlace = '#'+ favId;
 
             //create tourist sites list
-            var site = '<div class="row placeStyle tourPlace" id ="'+ placeClass +'"><div class="col-sm-3"><img src='+ innerArray['icon']+' alt="Girl in a jacket" style="width:100%; height:100%;"></div><div class="col-sm-9" id ="divName"><span><strong id ="nameOfPlace">' + innerArray['name'] + '</strong></span><br><span>' + stars+ ' '+ theRating + '</span><br><span style="margin-bottom: 3px;" id="fav"><a id ="'+ innerArray['place_id'] + '"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModal'+ i + '">View Details</button></a><button type="button" id="'+ favId +'" style="margin-left:8px;" class="btn btn-outline-primary btn-sm customColorFavBtn" value ="'+ favUrl +'"><span class="customColorFav">Add favourite</span> <i class="fas fa-heart" style ="color:red;"></i></button><!-- Modal --><div class="modal fade" id="exampleModal'+ i + '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="exampleModalLabel"><strong>'+ innerArray['name']+'</strong></h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body"><span>Vicinity: '+ innerArray['vicinity'] +'</span><br><span>Current Status: '+ innerArray['business_status']+'</span><br><span>'+ services +'</span><br><span>'+ stars+'</span></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div></div></div></div></span><br></div><hr>';
+            var site = '<div class="row placeStyle tourPlace" id ="'+ placeClass +'"><div class="col-sm-3"><img src='+ innerArray['icon']+' alt="Girl in a jacket" style="width:100%; height:100%;" id="imgPlace"></div><div class="col-sm-9" id ="divName"><span><strong id ="nameOfPlace">' + innerArray['name'] + '</strong></span><br><span>' + stars+ ' '+ theRating + '</span><br><span style="margin-bottom: 3px;" id="fav"><a id ="'+ innerArray['place_id'] + '"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModal'+ i + '">View Details</button></a><button type="button" id="'+ favId +'" style="margin-left:8px;" class="btn btn-outline-primary btn-sm customColorFavBtn" value ="'+ favUrl +'"><span class="customColorFav">Add favourite</span> <i class="fas fa-heart" style ="color:red;"></i></button><!-- Modal --><div class="modal fade" id="exampleModal'+ i + '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="exampleModalLabel"><strong>'+ innerArray['name']+'</strong></h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body"><span>Vicinity: '+ innerArray['vicinity'] +'</span><br><span>Current Status: '+ innerArray['business_status']+'</span><br><span>'+ services +'</span><br><span>'+ stars+'</span></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div></div></div></div></span><br></div><hr>';
 			document.querySelector('#listPlaces').insertAdjacentHTML('beforeend', site);
 			
 			var hoverDiv = '#'+ placeClass;

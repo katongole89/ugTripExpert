@@ -1,0 +1,12 @@
+@media only screen and (min-width: 992px) {
+  #menuBtn {
+    display: none;
+  }
+  
+}
+
+@media only screen and (max-width: 572px) {
+  #imgPlace {
+    max-width: 40%;
+  }
+}

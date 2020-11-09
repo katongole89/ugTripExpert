@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.response import Response
 import json
 import requests
@@ -17,6 +17,7 @@ from rest_framework.views import APIView
 from django.http import JsonResponse
 from rest_framework import status
 from .serializers import registrationSerializer
+from django.contrib import messages
 
 # Create your views here.
 class registerAuth(APIView):
@@ -40,3 +41,7 @@ class registerAuth(APIView):
                 }
             return JsonResponse(data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def alreadyExist(request):
+    messages.add_message(request, messages.INFO, 'this email has already been used in another login approach', extra_tags='alreadyUsed')
+    return redirect('/gis/login/')
